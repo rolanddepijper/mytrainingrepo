@@ -8,9 +8,66 @@
       "title": "Home View",
       "addToNavigation": true,
       "icon": "home"
+    },
+    {
+      "type": "kendo-ui-mobile:view",
+      "name": "masterDetailView",
+      "components": [
+        {
+          "type": "kendo-ui-mobile:editableList",
+          "listExtraFields": [],
+          "detailExtraFields": [],
+          "components": [],
+          "name": "masterDetailViewModel",
+          "dataProvider": "progressDataProvider",
+          "collection": "State",
+          "headerField": "StateName",
+          "pullToRefresh": false,
+          "endlessScroll": false,
+          "deleteItemButton": false,
+          "detailHeaderFieldSource": "static",
+          "detailHeaderFieldValue": "Detail",
+          "addItemForm": false,
+          "editItemForm": false
+        }
+      ],
+      "title": "Master Detail",
+      "addToNavigation": true,
+      "icon": "organize"
+    },
+    {
+      "type": "kendo-ui-mobile:view",
+      "name": "authenticationView",
+      "components": [
+        {
+          "type": "kendo-ui-mobile:authentication",
+          "name": "authenticationViewModel",
+          "dataProvider": "progressDataProvider",
+          "emailLabel": "Email",
+          "passwordLabel": "Password",
+          "signinLabel": "Sign In",
+          "signinRedirect": "masterDetailView",
+          "enableRegistration": false,
+          "enableLogout": false,
+          "enableRememberme": false
+        }
+      ],
+      "title": "Authentication",
+      "addToNavigation": false
     }
   ],
-  "dataProviders": [],
+  "dataProviders": [
+    {
+      "type": "kendo-ui-mobile:dataProvider",
+      "name": "progressDataProvider",
+      "catalogContent": "[{\"name\":\"State\",\"path\":\"/State\",\"autoSave\":true,\"schema\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"dsState\":{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"eState\":{\"type\":\"array\",\"items\":{\"additionalProperties\":false,\"properties\":{\"_id\":{\"type\":\"string\",\"name\":\"_id\"},\"_errorString\":{\"type\":\"string\",\"name\":\"_errorString\"},\"id\":{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"id\",\"name\":\"id\"},\"seq\":{\"type\":\"integer\",\"ablType\":\"INTEGER\",\"default\":0,\"title\":\"seq\",\"name\":\"seq\"},\"State\":{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"State\",\"name\":\"State\"},\"StateName\":{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"StateName\",\"name\":\"StateName\"},\"Country\":{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"Country\",\"name\":\"Country\"},\"Timezone\":{\"type\":\"integer\",\"ablType\":\"INTEGER\",\"default\":0,\"title\":\"Timezone\",\"name\":\"Timezone\"},\"NogEen\":{\"type\":\"boolean\",\"ablType\":\"LOGICAL\",\"default\":false,\"title\":\"NogEen\",\"name\":\"NogEen\"}}}}}}}},\"operations\":[{\"name\":\"count\",\"path\":\"/count?filter={filter}\",\"useBeforeImage\":false,\"type\":\"invoke\",\"verb\":\"put\",\"params\":[],\"url\":\"/rest/AETFMobileService/State/count?filter={filter}\"},{\"path\":\"\",\"useBeforeImage\":false,\"type\":\"update\",\"verb\":\"put\",\"params\":[{\"name\":\"dsState\",\"type\":\"REQUEST_BODY\"}],\"url\":\"/rest/AETFMobileService/State\"},{\"path\":\"?filter={filter}\",\"useBeforeImage\":false,\"type\":\"read\",\"verb\":\"get\",\"mappingType\":\"JFP\",\"capabilities\":\"ablFilter,top,skip,id,orderBy\",\"params\":[],\"url\":\"/rest/AETFMobileService/State?filter={filter}\"},{\"path\":\"\",\"useBeforeImage\":false,\"type\":\"delete\",\"verb\":\"delete\",\"params\":[{\"name\":\"dsState\",\"type\":\"REQUEST_BODY\"}],\"url\":\"/rest/AETFMobileService/State\"},{\"path\":\"\",\"useBeforeImage\":false,\"type\":\"create\",\"verb\":\"post\",\"params\":[{\"name\":\"dsState\",\"type\":\"REQUEST_BODY\"}],\"url\":\"/rest/AETFMobileService/State\"}],\"fn\":{\"count\":{}},\"url\":\"/rest/AETFMobileService/State\",\"fields\":{\"eState\":[{\"type\":\"string\",\"name\":\"_errorString\"},{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"id\",\"name\":\"id\"},{\"type\":\"integer\",\"ablType\":\"INTEGER\",\"default\":0,\"title\":\"seq\",\"name\":\"seq\"},{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"State\",\"name\":\"State\"},{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"StateName\",\"name\":\"StateName\"},{\"type\":\"string\",\"ablType\":\"CHARACTER\",\"default\":\"\",\"title\":\"Country\",\"name\":\"Country\"},{\"type\":\"integer\",\"ablType\":\"INTEGER\",\"default\":0,\"title\":\"Timezone\",\"name\":\"Timezone\"},{\"type\":\"boolean\",\"ablType\":\"LOGICAL\",\"default\":false,\"title\":\"NogEen\",\"name\":\"NogEen\"}]},\"primaryKeys\":{},\"_dataSetName\":\"dsState\",\"generic\":{}}]",
+      "title": "Progress Data Service",
+      "source": "jsdo",
+      "url": "https://localhost:8811/AETFMobile",
+      "catalogUrl": "https://localhost:8811/AETFMobile/static/mobile/AETFMobileService.json",
+      "authentication": "basic"
+    }
+  ],
   "name": "kendoUiMobileApp",
   "navigation": "tabstrip",
   "view": "home",
