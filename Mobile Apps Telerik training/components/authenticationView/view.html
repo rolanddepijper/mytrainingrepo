@@ -3,7 +3,7 @@
         <form>
             <ul data-role="listview" data-style="inset">
                 <li>
-                    <label>Email
+                    <label>UserId
                         <input type="email" data-bind="value: authenticationViewModel.email" required autofocus>
                     </label>
                 </li>
@@ -30,6 +30,9 @@
 
     <!-- START_CUSTOM_CODE_authenticationView -->
     <!-- Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes -->
-
+    <script>
+        var email = document.getElementsByTagName("li")[0].getElementsByTagName("input")[0];
+        email.type = 'text';
+    </script>
     <!-- END_CUSTOM_CODE_authenticationView -->
 </div>

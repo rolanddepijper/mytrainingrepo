@@ -12,7 +12,7 @@ app.authenticationView = kendo.observable({
 (function(parent) {
     var provider = app.data.progressDataProvider,
 
-        signinRedirect = 'masterDetailView',
+        signinRedirect = 'home',
         init = function(error) {
             if (error) {
                 if (error.message) {

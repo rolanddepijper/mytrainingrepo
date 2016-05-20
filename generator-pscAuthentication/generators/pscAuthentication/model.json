@@ -1,0 +1,14 @@
+{
+    "name": "authenticationViewModel",
+    "dataProvider": "progressDataProvider",
+    "emailLabel": "UserId",
+    "passwordLabel": "Password",
+    "signinLabel": "Sign In",
+    "signinRedirect": "home",
+    "enableRegistration": false,
+    "enableLogout": false,
+    "enableRememberme": false,
+    "type": "pscAuthentication:pscAuthentication",
+    "title": "Authentication",
+    "isNew": true
+}
