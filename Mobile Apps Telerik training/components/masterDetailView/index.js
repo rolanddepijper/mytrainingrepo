@@ -63,10 +63,27 @@ app.masterDetailView = kendo.observable({
             dataSource: dataSource,
             _dataSourceOptions: dataSourceOptions,
             _jsdoOptions: jsdoOptions,
+            searchChange: function(e) {
+                var searchVal = e.target.value,
+                    searchFilter;
+
+                if (searchVal) {
+                    searchFilter = {
+                        field: 'State',
+                        operator: 'contains',
+                        value: searchVal
+                    };
+                }
+                fetchFilteredData(masterDetailViewModel.get('paramFilter'), searchFilter);
+            },
             itemClick: function(e) {
 
                 app.mobileApp.navigate('#components/masterDetailView/details.html?uid=' + e.dataItem.uid);
 
+            },
+            editClick: function() {
+                var uid = this.currentItem.uid;
+                app.mobileApp.navigate('#components/masterDetailView/edit.html?uid=' + uid);
             },
             detailsShow: function(e) {
                 var item = e.view.params.uid,
@@ -82,6 +99,37 @@ app.masterDetailView = kendo.observable({
             },
             currentItem: null
         });
+
+    parent.set('editItemViewModel', kendo.observable({
+        onShow: function(e) {
+            var itemUid = e.view.params.uid,
+                dataSource = masterDetailViewModel.get('dataSource'),
+                itemData = dataSource.getByUid(itemUid);
+
+            this.set('itemData', itemData);
+            this.set('editFormData', {
+                textField: itemData.StateName,
+            });
+        },
+        onSaveClick: function(e) {
+            var editFormData = this.get('editFormData'),
+                itemData = this.get('itemData'),
+                dataSource = masterDetailViewModel.get('dataSource');
+
+            // prepare edit
+            itemData.set('StateName', editFormData.textField);
+
+            dataSource.one('sync', function(e) {
+                app.mobileApp.navigate('#:back');
+            });
+
+            dataSource.one('error', function() {
+                dataSource.cancelChanges(itemData);
+            });
+
+            dataSource.sync();
+        }
+    }));
 
     if (typeof dataProvider.sbProviderReady === 'function') {
         dataProvider.sbProviderReady(function dl_sbProviderReady() {
@@ -111,6 +159,14 @@ app.masterDetailView = kendo.observable({
 // START_CUSTOM_CODE_masterDetailViewModel
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
 
+var dataSourceOptions = app.customerListView.customerListViewModel.get('_dataSourceOptions');
+dataSourceOptions.serverFiltering = true;
+dataSourceOptions.serverSorting = true;
+dataSourceOptions.serverPaging = true;
+dataSourceOptions.pageSize = 50;
+dataSourceOptions.transport = {
+    countFnName: "count"
+};
 // you can handle the beforeFill / afterFill events here. For example:
 /*
 app.masterDetailView.masterDetailViewModel.get('_jsdoOptions').events = {
