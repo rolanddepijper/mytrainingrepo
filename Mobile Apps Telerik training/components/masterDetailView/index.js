@@ -55,6 +55,9 @@ app.masterDetailView = kendo.observable({
                 }
             },
             serverFiltering: true,
+            serverSorting: true,
+            serverPaging: true,
+            pageSize: 50
         },
         dataSource = new kendo.data.DataSource({
             pageSize: 50
@@ -159,13 +162,51 @@ app.masterDetailView = kendo.observable({
 // START_CUSTOM_CODE_masterDetailViewModel
 // Add custom code here. For more information about custom code, see http://docs.telerik.com/platform/screenbuilder/troubleshooting/how-to-keep-custom-code-changes
 
-var dataSourceOptions = app.customerListView.customerListViewModel.get('_dataSourceOptions');
+var dataSourceOptions = app.masterDetailView.masterDetailViewModel.get('_dataSourceOptions');
 dataSourceOptions.serverFiltering = true;
 dataSourceOptions.serverSorting = true;
 dataSourceOptions.serverPaging = true;
 dataSourceOptions.pageSize = 50;
 dataSourceOptions.transport = {
     countFnName: "count"
+};
+
+app.masterDetailView.masterDetailViewModel.get('_jsdoOptions').events = {
+    'afterSaveChanges' : [ {
+        scope : app.masterDetailView.masterDetailViewModel,
+        fn : function (jsdo, success, request) {
+            //afterSaveChanges event handler statements ...
+            var response = request.batch.operations[0].response;
+            var error = "", i;
+            if (!request.success && response)
+            {
+                try
+                {
+                    if (response._retVal) // HTTP500 - Return error
+                    {
+                        error += "\n" + response._retVal;
+                    }
+                    else if (response._errors instanceof Array &&
+                        response._errors.length > 0) // AppError
+                    {
+                        error += "\n" + response._errors[0]._errorMsg;
+                    }
+                    else if (response.dsState["prods:errors"] &&
+                                response.dsState["prods:errors"].eState instanceof Array) // temp-table errors
+                    {
+                        for (i = 0; i < response.dsState["prods:errors"].eState.length; i += 1)
+                        {
+                            error += "\n" + response.dsState["prods:errors"].eState[i]["prods:error"];
+                        }
+                    }
+                }
+                catch(response) {
+                    alert("Error while parsing response: " + response);
+                }
+             alert("Error returned from server: " + error);
+            }
+          }
+    } ]
 };
 // you can handle the beforeFill / afterFill events here. For example:
 /*
