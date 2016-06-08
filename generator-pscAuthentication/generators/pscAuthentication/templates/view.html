@@ -3,7 +3,7 @@
         <ul data-role="listview" data-style="inset">
             <li>
                 <label><%= emailLabel %>
-                    <input type="email"<% if (typeof emailPlaceholder !== 'undefined' && emailPlaceholder.length) { %> placeholder="<%= emailPlaceholder %>" <% } %>data-bind="value: <%= name %>.email" required
+                    <input type="text"<% if (typeof emailPlaceholder !== 'undefined' && emailPlaceholder.length) { %> placeholder="<%= emailPlaceholder %>" <% } %>data-bind="value: <%= name %>.email" required
                            autofocus/>
                 </label>
             </li>
@@ -33,7 +33,7 @@
         <ul data-role="listview" data-style="inset">
             <li>
                 <label><%= registerEmailLabel %>
-                    <input type="email"<% if (typeof registerEmailPlaceholder !== 'undefined' && registerEmailPlaceholder.length) { %> placeholder="<%= registerEmailPlaceholder %>" <% } %>data-bind="value: <%= name %>.email" required>
+                    <input type="text"<% if (typeof registerEmailPlaceholder !== 'undefined' && registerEmailPlaceholder.length) { %> placeholder="<%= registerEmailPlaceholder %>" <% } %>data-bind="value: <%= name %>.email" required>
                 </label>
             </li>
             <li>
