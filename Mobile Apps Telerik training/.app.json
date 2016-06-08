@@ -17,18 +17,53 @@
           "type": "kendo-ui-mobile:editableList",
           "listExtraFields": [],
           "detailExtraFields": [],
-          "components": [],
+          "components": [
+            {
+              "type": "kendo-ui-mobile:editableListForm",
+              "components": [
+                {
+                  "type": "kendo-ui-mobile:editableListFormField",
+                  "name": "textField",
+                  "title": "State name",
+                  "inputType": "text",
+                  "titlePosition": "left",
+                  "placeholder": "Type here ...",
+                  "dataBinding": "StateName"
+                }
+              ],
+              "name": "editableListForm3",
+              "formType": "edit"
+            },
+            {
+              "type": "kendo-ui-mobile:editableListForm",
+              "components": [
+                {
+                  "type": "kendo-ui-mobile:editableListFormField",
+                  "name": "country",
+                  "title": "Country",
+                  "inputType": "shortText",
+                  "dataBindingOptional": "Country"
+                }
+              ],
+              "name": "editableListForm5",
+              "formType": "detail"
+            }
+          ],
           "name": "masterDetailViewModel",
           "dataProvider": "progressDataProvider",
           "collection": "State",
           "headerField": "StateName",
-          "pullToRefresh": false,
-          "endlessScroll": false,
+          "filterField": "State",
+          "pullToRefresh": true,
+          "endlessScroll": true,
           "deleteItemButton": false,
           "detailHeaderFieldSource": "static",
           "detailHeaderFieldValue": "Detail",
+          "detailSubHeaderField": "StateName",
           "addItemForm": false,
-          "editItemForm": false
+          "editItemForm": true,
+          "editScreenHeaderSource": "static",
+          "editScreenHeaderValue": "Edit"
         }
       ],
       "title": "Master Detail",
@@ -54,6 +89,27 @@
       ],
       "title": "Authentication",
       "addToNavigation": false
+    },
+    {
+      "type": "kendo-ui-mobile:view",
+      "name": "pscAuthenticationView",
+      "components": [
+        {
+          "type": "pscAuthentication:pscAuthentication",
+          "name": "pscAuthenticationViewModel",
+          "dataProvider": "progressDataProvider",
+          "emailLabel": "UserId",
+          "passwordLabel": "Password",
+          "signinLabel": "Sign In",
+          "signinRedirect": "home",
+          "enableRegistration": false,
+          "enableLogout": false,
+          "enableRememberme": false
+        }
+      ],
+      "title": "Authentication",
+      "addToNavigation": true,
+      "icon": "home"
     }
   ],
   "dataProviders": [
@@ -69,10 +125,8 @@
     }
   ],
   "name": "kendoUiMobileApp",
-  "navigation": "tabstrip",
+  "navigation": "drawer",
   "view": "authenticationView",
-  "transition": "slide",
-  "showMoreTab": false,
   "skin": "nova",
   "skinMainColor": "#32364c",
   "skinTextColor": "#ffffff",
