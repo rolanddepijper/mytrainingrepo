@@ -29,6 +29,18 @@
                   "titlePosition": "left",
                   "placeholder": "Type here ...",
                   "dataBinding": "StateName"
+                },
+                {
+                  "type": "kendo-ui-mobile:editableListFormField",
+                  "name": "errors",
+                  "title": "Errors",
+                  "inputType": "group-separator"
+                },
+                {
+                  "type": "kendo-ui-mobile:editableListFormField",
+                  "name": "errorstring",
+                  "title": "Error",
+                  "inputType": "shortText"
                 }
               ],
               "name": "editableListForm3",
@@ -55,7 +67,7 @@
           "headerField": "StateName",
           "filterField": "State",
           "pullToRefresh": true,
-          "endlessScroll": false,
+          "endlessScroll": true,
           "deleteItemButton": false,
           "detailHeaderFieldSource": "static",
           "detailHeaderFieldValue": "Detail",

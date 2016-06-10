@@ -55,6 +55,9 @@ app.masterDetailView = kendo.observable({
                 }
             },
             serverFiltering: true,
+            serverSorting: true,
+            serverPaging: true,
+            pageSize: 50
         },
         dataSource = new kendo.data.DataSource({
             pageSize: 50
@@ -196,6 +199,10 @@ app.masterDetailView.masterDetailViewModel.get('_jsdoOptions').events = {
                     alert("Error while parsing response: " + response);
                 }
                 alert("Error returned from server: " + error);
+                var errorstring = document.getElementById('errorstring');
+                errorstring.style.backgroundColor = "red";
+                errorstring.innerHTML = error;
+
             }
         }
     }]
