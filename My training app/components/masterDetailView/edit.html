@@ -1,0 +1,30 @@
+<div data-role="view" data-title="Edit" data-model="app.masterDetailView.editItemViewModel" data-bind="events: { show: onShow }" id="masterDetailViewModelEditItemView">
+    <header data-role="header">
+        <div data-role="navbar" class="header-text">
+            <span>Edit</span>
+            <a data-role="backbutton" data-align="left">Cancel</a>
+            <a data-role="button" data-align="right" data-bind="events: { click: onSaveClick }">Save</a>
+        </div>
+    </header>
+    <!-- START_CUSTOM_CODE_masterDetailViewModel -->
+    <!-- END_CUSTOM_CODE_masterDetailViewModel -->
+    <div id="editableListForm3" class="form-view">
+        <form>
+            <ul class="form-content" data-role="listview" data-style="inset">
+                <li class="form-content-item">
+
+                    <label>
+
+                        <span>Text field</span>
+
+                        <input id="textField" data-bind="value: editFormData.textField" placeholder="Type here ..." type="text">
+                    </label>
+
+                </li>
+            </ul>
+        </form>
+        <!-- START_CUSTOM_CODE_editableListForm3 -->
+        // dus dit is het
+        <!-- END_CUSTOM_CODE_editableListForm3 -->
+    </div>
+</div>
