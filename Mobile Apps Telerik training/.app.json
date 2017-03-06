@@ -24,6 +24,7 @@
                 {
                   "type": "kendo-ui-mobile:editableListFormField",
                   "name": "textField",
+                  "dataBindingRelationChildren": "[]",
                   "title": "State name",
                   "inputType": "text",
                   "titlePosition": "left",
@@ -33,12 +34,14 @@
                 {
                   "type": "kendo-ui-mobile:editableListFormField",
                   "name": "errors",
+                  "dataBindingRelationChildren": "[]",
                   "title": "Errors",
                   "inputType": "group-separator"
                 },
                 {
                   "type": "kendo-ui-mobile:editableListFormField",
                   "name": "errorstring",
+                  "dataBindingRelationChildren": "[]",
                   "title": "Error",
                   "inputType": "shortText"
                 }
@@ -52,6 +55,7 @@
                 {
                   "type": "kendo-ui-mobile:editableListFormField",
                   "name": "country",
+                  "dataBindingRelationChildren": "[]",
                   "title": "Country",
                   "inputType": "shortText",
                   "dataBindingOptional": "Country"
@@ -66,9 +70,11 @@
           "collection": "State",
           "headerField": "StateName",
           "filterField": "State",
+          "isMapView": false,
           "pullToRefresh": true,
           "endlessScroll": true,
           "deleteItemButton": false,
+          "deleteItemConfirmation": true,
           "detailHeaderFieldSource": "static",
           "detailHeaderFieldValue": "Detail",
           "detailSubHeaderField": "StateName",

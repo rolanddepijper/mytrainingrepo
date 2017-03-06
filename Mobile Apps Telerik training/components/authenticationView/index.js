@@ -21,12 +21,17 @@ app.authenticationView = kendo.observable({
                 return false;
             }
 
-            var activeView = '.signin-view';
+            var activeView = '.signin-view',
+                model = parent.authenticationViewModel;
 
             if (provider.setup && provider.setup.offlineStorage && !app.isOnline()) {
                 $('.offline').show().siblings().hide();
             } else {
                 $(activeView).show().siblings().hide();
+            }
+
+            if (model && model.set) {
+                model.set('logout', null);
             }
 
         },

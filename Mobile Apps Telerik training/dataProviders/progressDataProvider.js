@@ -3,23 +3,27 @@
 (function() {
     var jsdoSession,
         jsdoSettings = {
-            serviceURI: 'https://localhost:8811/AETFMobile',
-            catalogURIs: 'https://localhost:8811/AETFMobile/static/mobile/AETFMobileService.json',
+            serviceURI: 'https://10.131.45.12:8811/AETFMobile',
+            catalogURIs: 'https:///10.131.45.12:8811/AETFMobile/static/mobile/AETFMobileService.json',
             authenticationModel: 'basic'
         },
         userFunctions = {
             currentUser: function _currentUser() {
-                if ($) {
-                    var promise = $.Deferred();
-                    window.setTimeout(function() {
-                        promise.reject();
-                    }, 0);
-                    return promise;
+                var promise = $.Deferred();
+                if (jsdoSession && jsdoSession.connected && jsdoSession.userName) {
+                    promise.resolve(jsdoSession.userName);
+                } else {
+                    promise.reject();
                 }
-                return null;
+                return promise;
             },
             login: function _login(email, password, done, fail) {
                 var promise = jsdoSession.login(email, password);
+                promise.done(done);
+                promise.fail(fail);
+            },
+            logout: function _logout(done, fail) {
+                var promise = jsdoSession.logout();
                 promise.done(done);
                 promise.fail(fail);
             },

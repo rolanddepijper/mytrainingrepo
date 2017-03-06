@@ -32,6 +32,15 @@ app.masterDetailView = kendo.observable({
                 dataSource.filter({});
             }
         },
+        processImage = function(img) {
+
+            if (!img) {
+                var empty1x1png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQI12NgYAAAAAMAASDVlMcAAAAASUVORK5CYII=';
+                img = 'data:image/png;base64,' + empty1x1png;
+            }
+
+            return img;
+        },
         jsdoOptions = {
             name: 'State',
             autoFill: false
@@ -40,6 +49,7 @@ app.masterDetailView = kendo.observable({
             type: 'jsdo',
             transport: {},
             error: function(e) {
+
                 if (e.xhr) {
                     alert(JSON.stringify(e.xhr));
                 }
@@ -79,17 +89,68 @@ app.masterDetailView = kendo.observable({
                 }
                 fetchFilteredData(masterDetailViewModel.get('paramFilter'), searchFilter);
             },
-            itemClick: function(e) {
+            fixHierarchicalData: function(data) {
+                var result = {},
+                    layout = {};
 
-                app.mobileApp.navigate('#components/masterDetailView/details.html?uid=' + e.dataItem.uid);
+                $.extend(true, result, data);
+
+                (function removeNulls(obj) {
+                    var i, name,
+                        names = Object.getOwnPropertyNames(obj);
+
+                    for (i = 0; i < names.length; i++) {
+                        name = names[i];
+
+                        if (obj[name] === null) {
+                            delete obj[name];
+                        } else if ($.type(obj[name]) === 'object') {
+                            removeNulls(obj[name]);
+                        }
+                    }
+                })(result);
+
+                (function fix(source, layout) {
+                    var i, j, name, srcObj, ltObj, type,
+                        names = Object.getOwnPropertyNames(layout);
+
+                    for (i = 0; i < names.length; i++) {
+                        name = names[i];
+                        srcObj = source[name];
+                        ltObj = layout[name];
+                        type = $.type(srcObj);
+
+                        if (type === 'undefined' || type === 'null') {
+                            source[name] = ltObj;
+                        } else {
+                            if (srcObj.length > 0) {
+                                for (j = 0; j < srcObj.length; j++) {
+                                    fix(srcObj[j], ltObj[0]);
+                                }
+                            } else {
+                                fix(srcObj, ltObj);
+                            }
+                        }
+                    }
+                })(result, layout);
+
+                return result;
+            },
+            itemClick: function(e) {
+                var dataItem = e.dataItem || masterDetailViewModel.originalItem;
+
+                app.mobileApp.navigate('#components/masterDetailView/details.html?uid=' + dataItem.uid);
 
             },
             editClick: function() {
-                var uid = this.currentItem.uid;
+                var uid = this.originalItem.uid;
                 app.mobileApp.navigate('#components/masterDetailView/edit.html?uid=' + uid);
             },
             detailsShow: function(e) {
-                var item = e.view.params.uid,
+                masterDetailViewModel.setCurrentItemByUid(e.view.params.uid);
+            },
+            setCurrentItemByUid: function(uid) {
+                var item = uid,
                     dataSource = masterDetailViewModel.get('dataSource'),
                     itemModel = dataSource.getByUid(item);
 
@@ -97,22 +158,44 @@ app.masterDetailView = kendo.observable({
                     itemModel.StateName = String.fromCharCode(160);
                 }
 
-                masterDetailViewModel.set('currentItem', null);
-                masterDetailViewModel.set('currentItem', itemModel);
+                masterDetailViewModel.set('originalItem', itemModel);
+                masterDetailViewModel.set('currentItem',
+                    masterDetailViewModel.fixHierarchicalData(itemModel));
+
+                return itemModel;
             },
-            currentItem: null
+            linkBind: function(linkString) {
+                var linkChunks = linkString.split('|');
+                if (linkChunks[0].length === 0) {
+                    return this.get("currentItem." + linkChunks[1]);
+                }
+                return linkChunks[0] + this.get("currentItem." + linkChunks[1]);
+            },
+            imageBind: function(imageField) {
+                if (imageField.indexOf("|") > -1) {
+                    return processImage(this.get("currentItem." + imageField.split("|")[0]));
+                }
+                return processImage(imageField);
+            },
+            currentItem: {}
         });
 
     parent.set('editItemViewModel', kendo.observable({
+        editFormData: {},
         onShow: function(e) {
             var itemUid = e.view.params.uid,
                 dataSource = masterDetailViewModel.get('dataSource'),
-                itemData = dataSource.getByUid(itemUid);
+                itemData = dataSource.getByUid(itemUid),
+                fixedData = masterDetailViewModel.fixHierarchicalData(itemData);
 
             this.set('itemData', itemData);
             this.set('editFormData', {
                 textField: itemData.StateName,
             });
+        },
+        linkBind: function(linkString) {
+            var linkChunks = linkString.split(':');
+            return linkChunks[0] + ':' + this.get("itemData." + linkChunks[1]);
         },
         onSaveClick: function(e) {
             var editFormData = this.get('editFormData'),
@@ -143,7 +226,20 @@ app.masterDetailView = kendo.observable({
     }
 
     parent.set('onShow', function(e) {
-        var param = e.view.params.filter ? JSON.parse(e.view.params.filter) : null;
+        var param = e.view.params.filter ? JSON.parse(e.view.params.filter) : null,
+            isListmenu = false,
+            backbutton = e.view.element && e.view.element.find('header [data-role="navbar"] .backButtonWrapper');
+
+        if (param || isListmenu) {
+            backbutton.show();
+            backbutton.css('visibility', 'visible');
+        } else {
+            if (e.view.element.find('header [data-role="navbar"] [data-role="button"]').length) {
+                backbutton.hide();
+            } else {
+                backbutton.css('visibility', 'hidden');
+            }
+        }
 
         dataProvider.loadCatalogs().then(function _catalogsLoaded() {
             var jsdoOptions = masterDetailViewModel.get('_jsdoOptions'),
@@ -154,9 +250,11 @@ app.masterDetailView = kendo.observable({
             dataSourceOptions.transport.jsdo = jsdo;
             dataSource = new kendo.data.DataSource(dataSourceOptions);
             masterDetailViewModel.set('dataSource', dataSource);
+
             fetchFilteredData(param);
         });
     });
+
 })(app.masterDetailView);
 
 // START_CUSTOM_CODE_masterDetailViewModel
@@ -176,22 +274,28 @@ app.masterDetailView.masterDetailViewModel.get('_jsdoOptions').events = {
         scope: app.masterDetailView.masterDetailViewModel,
         fn: function(jsdo, success, request) {
             //afterSaveChanges event handler statements ...
+            alert(request);
+            alert(request.batch);
             var response = request.batch.operations[0].response;
             var error = "",
                 i;
             if (!request.success && response) {
-                try {
+                try 
+                {
                     if (response._retVal) // HTTP500 - Return error
                     {
                         error += "\n" + response._retVal;
-                    } else if (response._errors instanceof Array &&
+                    } 
+                    else if (response._errors instanceof Array &&
                         response._errors.length > 0) // AppError
                     {
                         error += "\n" + response._errors[0]._errorMsg;
-                    } else if (response.dsState["prods:errors"] &&
+                    } 
+                    else if (response.dsState["prods:errors"] &&
                         response.dsState["prods:errors"].ttState instanceof Array) // temp-table errors
                     {
-                        for (i = 0; i < response.dsState["prods:errors"].ttState.length; i += 1) {
+                        for (i = 0; i < response.dsState["prods:errors"].ttState.length; i += 1) 
+                        {
                             error += "\n" + response.dsState["prods:errors"].ttState[i]["prods:error"];
                         }
                     }

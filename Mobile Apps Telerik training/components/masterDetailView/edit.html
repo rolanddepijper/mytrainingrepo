@@ -1,7 +1,7 @@
 <div data-role="view" data-title="Edit" data-model="app.masterDetailView.editItemViewModel" data-bind="events: { show: onShow }" id="masterDetailViewModelEditItemView">
     <header data-role="header">
         <div data-role="navbar" class="header-text">
-            <span style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: center; display: block; margin-left: 70px; margin-right: 70px;" data-role="view-title">Edit</span>
+            <span>Edit</span>
             <a data-role="backbutton" data-align="left">Cancel</a>
             <a data-role="button" data-align="right" data-bind="events: { click: onSaveClick }">Save</a>
         </div>
@@ -26,13 +26,12 @@
                 </li>
                 <li class="form-content-item">
 
-                    <p class="editableListItem">
-                        <label><span>Error</span>
+                    <div class="editableListItem">
+                        <div>Error</div>
 
-                            <span id="errorstring" data-bind="text: editFormData.errorstring"></span>
+                        <div id="errorstring" data-bind="html: editFormData.errorstring"></div>
 
-                        </label>
-                    </p>
+                    </div>
 
                 </li>
             </ul>
